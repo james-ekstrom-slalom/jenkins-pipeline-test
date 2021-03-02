@@ -8,8 +8,11 @@ def build(pipelineVars) {
     }
 }
 
-def test() {
-
+def test(pipelineVars) {
+    echo "Testing ${pipelineVars.buildArgs}"
+    dir("${pipelineVars.buildArgs.reactjs.name}") {
+        sh 'npm run-script test'
+    }
 }
 
 return this

@@ -6,16 +6,25 @@ def runPipeline(build) {
     def reactJs = new com.prj.ReactjsBuild()
     def pipelineVars = [:]
 
+    // TODO Get common build properties (roles, buckets, etc) from convention based ssm or vault parameter stores
+    // Prevent passing around a huge collection of parameters
+
     // TODO set based on branch name
     pipelineVars.isFeature = false
     pipelineVars.isMaster = true
-
 
     node {
         stage('PreBuild') {
             checkout scm
 
             pipelineVars.buildArgs = readYaml file: "build.yaml"
+
+            // Get which variables we need from the build target??
+            // Then look them up in vault or ssm?
+
+            // Can we benefit from containerized builds here??
+            // A dockerfile will make it easier to build in general because the app developer defines the build env
+            // Just need to pass the correct parameters to it.
 
             env.NODEJS_HOME = "${tool 'nodejs'}"
             // on linux / mac
@@ -25,6 +34,14 @@ def runPipeline(build) {
 
         stage('Build') {
             reactJs.build(pipelineVars)
+        }
+
+        stage('Test') {
+            reactJs.test(pipelineVars)
+        }
+
+        stage('Package') {
+
         }
     }
 }
