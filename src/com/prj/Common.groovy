@@ -21,6 +21,14 @@ def runPipeline(build) {
 
             // Get which variables we need from the build target??
             // Then look them up in vault or ssm?
+            withAWSParameterStore(credentialsId: 'aws', naming: 'relative', path: '/james-build-test', recursive: true, regionName: 'us-west-2') {
+                pipelineVars.commonBuildJson = env.COMMONBUILDJSON
+            }
+
+            withAWSParameterStore(credentialsId: 'aws', naming: 'relative', path: pipelineVars.buildArgs.parameterPath, recursive: true, regionName: 'us-west-2') {
+                pipelineVars.buildJson = env.BUILDJSON
+            }
+
 
             // Can we benefit from containerized builds here??
             // A dockerfile will make it easier to build in general because the app developer defines the build env
@@ -41,7 +49,7 @@ def runPipeline(build) {
         }
 
         stage('Package') {
-
+            // Package the build artifacts and push them to a centralized location
         }
     }
 }
