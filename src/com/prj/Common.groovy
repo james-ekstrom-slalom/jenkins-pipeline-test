@@ -33,6 +33,7 @@ def runPipeline(build) {
                 returnStdout: true
             ).trim()
 
+            pipelineVars.parameters = [:]
             pipelineVars.parameters.common = readJSON text: pipelineVars.commonBuildJson
             pipelineVars.parameters.additional = readJSON text: pipelineVars.buildJson
 
