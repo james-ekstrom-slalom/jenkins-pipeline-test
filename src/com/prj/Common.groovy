@@ -33,6 +33,9 @@ def runPipeline(build) {
                 returnStdout: true
             ).trim()
 
+            pipelineVars.parameters.common = readJSON text: pipelineVars.commonBuildJson
+            pipelineVars.parameters.additional = readJSON text: pipelineVars.buildJson
+
 
             // Can we benefit from containerized builds here??
             // A dockerfile will make it easier to build in general because the app developer defines the build env

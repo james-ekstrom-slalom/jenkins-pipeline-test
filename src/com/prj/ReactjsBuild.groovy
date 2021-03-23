@@ -9,7 +9,10 @@ def build(pipelineVars) {
     }
 
     echo "Common parameters: ${pipelineVars.commonBuildJson}"
-    echo "Build parameters: ${pipelineVars.commonBuildJson}"
+    echo "Build parameters: ${pipelineVars.buildJson}"
+
+    echo "Common parameters parsed: ${pipelineVars.parameters.common}"
+    echo "Build parameters parsed: ${pipelineVars.parameters.additional}"
 }
 
 def test(pipelineVars) {
