@@ -21,15 +21,17 @@ def runPipeline(build) {
 
             // Get which variables we need from the build target??
             // Then look them up in vault or ssm?
-            withAWSParameterStore(credentialsId: 'aws', naming: 'basename', path: '/service/test-build/james-build-test', recursive: true, regionName: 'us-west-2') {
-                echo "Setting common build json"
-                pipelineVars.commonBuildJson = env.COMMONBUILDJSON
-            }
+            echo "Setting common build json"
+            pipelineVars.commonBuildJson = sh (
+                script: "aws ssm get-parameter --name \"/service/test-build/james-build-test\" --region us-west-2 | python -c \"import sys, json; print(json.load(sys.stdin)['Parameter']['Value'])\"",
+                returnStdout: true
+            ).trim()
 
-            withAWSParameterStore(credentialsId: 'aws', naming: 'basename', path: pipelineVars.buildArgs.parameterPath, recursive: true, regionName: 'us-west-2') {
-                echo "Setting build json"
-                pipelineVars.buildJson = env.BUILDJSON
-            }
+            echo "Setting build json"
+            pipelineVars.buildJson = sh (
+                script: "aws ssm get-parameter --name \"${pipelineVars.buildArgs.parameterPath}\" --region us-west-2 | python -c \"import sys, json; print(json.load(sys.stdin)['Parameter']['Value'])\"",
+                returnStdout: true
+            ).trim()
 
 
             // Can we benefit from containerized builds here??
