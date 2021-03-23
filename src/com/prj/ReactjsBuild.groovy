@@ -8,8 +8,8 @@ def build(pipelineVars) {
         sh 'npm run-script build'
     }
 
-    echo "Common parameters: ${env.COMMONBUILDJSON}"
-    echo "Build parameters: ${env.BUILDJSON}"
+    echo "Common parameters: ${pipelineVars.commonBuildJson}"
+    echo "Build parameters: ${pipelineVars.commonBuildJson}"
 }
 
 def test(pipelineVars) {

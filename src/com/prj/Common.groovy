@@ -22,10 +22,12 @@ def runPipeline(build) {
             // Get which variables we need from the build target??
             // Then look them up in vault or ssm?
             withAWSParameterStore(credentialsId: 'aws', naming: 'relative', path: '/james-build-test', recursive: true, regionName: 'us-west-2') {
+                echo "Setting common build json"
                 pipelineVars.commonBuildJson = env.COMMONBUILDJSON
             }
 
             withAWSParameterStore(credentialsId: 'aws', naming: 'relative', path: pipelineVars.buildArgs.parameterPath, recursive: true, regionName: 'us-west-2') {
+                echo "Setting build json"
                 pipelineVars.buildJson = env.BUILDJSON
             }
 
